@@ -30,7 +30,7 @@ Note: Secure XML files can only be decrypted by the user account that created th
 
 # Notes
 
-Jussi Jaurola <jussi@cohesity.com>
+Jussi Jaurola - <jussi@cohesity.com>
 
 ```
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
