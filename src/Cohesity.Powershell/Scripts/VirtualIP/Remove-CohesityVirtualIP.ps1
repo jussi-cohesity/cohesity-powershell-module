@@ -20,6 +20,7 @@ function Remove-CohesityVirtualIP {
         [ValidateNotNullOrEmpty()]
         [string[]]$VirtualIPs
     )
+
     Begin {
         if (-not (Test-Path -Path "$HOME/.cohesity")) {
             throw "Failed to authenticate. Please connect to the Cohesity Cluster using 'Connect-CohesityCluster'"
@@ -32,7 +33,7 @@ function Remove-CohesityVirtualIP {
     Process {
         $vlanObject = Get-CohesityVlan | Where-Object { $_.vlanName -eq $VlanName }
         if ($null -eq $vlanObject) {
-            Write-Host "VLAN name  '$VlanName' does not exists"
+            Write-Host "VLAN name '$VlanName' does not exists"
             return
         }
         if ($null -eq $vlanObject.ips) {
@@ -69,6 +70,7 @@ function Remove-CohesityVirtualIP {
             }
         }
     }
+
     End {
     }
 }

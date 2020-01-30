@@ -5,7 +5,7 @@ class VirtualIP {
     [string]$Gateway
     [string]$Subnet
 
-    VirtualIP($ip,$vlanName,$hostname,$gateway,$subnet){
+    VirtualIP($ip, $vlanName, $hostname, $gateway, $subnet) {
         $this.Ip = $ip
         $this.VlanName = $vlanName
         $this.Hostname = $hostname
@@ -32,36 +32,40 @@ function Get-CohesityVirtualIP {
         [ValidateNotNullOrEmpty()]
         [string]$VlanName
     )
+
     Begin {
     }
 
     Process {
         $vlanObject = $null
-        if($VlanName) {
+        if ($VlanName) {
             $vlanObject = Get-CohesityVlan | Where-Object { $_.vlanName -eq $VlanName }
-        } else {
+        }
+        else {
             $vlanObject = Get-CohesityVlan
         }
         if ($null -eq $vlanObject) {
-            Write-Host "VLAN name  '$VlanName' does not exists"
+            Write-Host "VLAN name '$VlanName' does not exists"
             return
         }
         $virtualIPList = @()
-        if("System.Array" -eq $vlanObject.GetType().BaseType.ToString()) {
-            foreach($item in $vlanObject) {
-                foreach($ip in $item.ips) {
-                    [VirtualIP]$vip = [VirtualIP]::New($ip,$item.vlanName,$item.hostname,$item.gateway,$item.subnet.ip)
+        if ("System.Array" -eq $vlanObject.GetType().BaseType.ToString()) {
+            foreach ($item in $vlanObject) {
+                foreach ($ip in $item.ips) {
+                    [VirtualIP]$vip = [VirtualIP]::New($ip, $item.vlanName, $item.hostname, $item.gateway, $item.subnet.ip)
                     $virtualIPList += $vip
                 }
             }
-        } else {
-            foreach($ip in $vlanObject.ips) {
-                [VirtualIP]$vip = [VirtualIP]::New($ip,$vlanObject.vlanName,$vlanObject.hostname,$vlanObject.gateway,$vlanObject.subnet.ip)
+        }
+        else {
+            foreach ($ip in $vlanObject.ips) {
+                [VirtualIP]$vip = [VirtualIP]::New($ip, $vlanObject.vlanName, $vlanObject.hostname, $vlanObject.gateway, $vlanObject.subnet.ip)
                 $virtualIPList += $vip
             }
         }
         $virtualIPList
     }
+
     End {
     }
 }

@@ -29,6 +29,7 @@ function New-CohesityVlan {
         [ValidateNotNullOrEmpty()]
         [string]$Gateway
     )
+
     Begin {
         if (-not (Test-Path -Path "$HOME/.cohesity")) {
             throw "Failed to authenticate. Please connect to the Cohesity Cluster using 'Connect-CohesityCluster'"
@@ -41,7 +42,7 @@ function New-CohesityVlan {
     Process {
         $interfaceGroupObject = Get-CohesityInterfaceGroup | Where-Object { $_.name -eq $InterfaceGroupName }
         if ($null -eq $interfaceGroupObject) {
-            Write-Host "Interface group name  '$InterfaceGroupName' does not exists"
+            Write-Host "Interface group name '$InterfaceGroupName' does not exists"
             return
         }
         $cohesityClusterURL = $cohesityCluster + '/irisservices/api/v1/public/vlans/' + $VlanId
@@ -69,6 +70,7 @@ function New-CohesityVlan {
             CSLog -Message $errorMsg
         }
     }
+
     End {
     }
 }

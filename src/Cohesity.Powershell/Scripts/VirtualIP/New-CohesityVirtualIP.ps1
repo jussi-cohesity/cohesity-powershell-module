@@ -9,26 +9,27 @@ function New-CohesityVirtualIP {
         .LINK
         https://cohesity.github.io/cohesity-powershell-module/#/README
         .EXAMPLE
-        New-CohesityVirtualIP -VlanName "intf_group2.0" -Subnet "10.3.144.0" -NetmaskBitsForSubnet 20 -Gateway "10.3.144.1" -VirtualIPs "10.3.144.14", "10.3.144.15"
+        New-CohesityVirtualIP -VlanId 0 -Subnet "1.3.4.0" -NetmaskBitsForSubnet 20 -Gateway "1.3.4.1" -VirtualIPs "1.3.4.14", "1.3.4.15"
     #>
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
-        [string]$VlanName,
+        [string]$VlanId,
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]$Subnet,
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [int]$NetmaskBitsForSubnet,
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [string]$Gateway,
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string[]]$VirtualIPs
     )
+
     Begin {
         if (-not (Test-Path -Path "$HOME/.cohesity")) {
             throw "Failed to authenticate. Please connect to the Cohesity Cluster using 'Connect-CohesityCluster'"
@@ -39,9 +40,9 @@ function New-CohesityVirtualIP {
     }
 
     Process {
-        $vlanObject = Get-CohesityVlan | Where-Object { $_.vlanName -eq $VlanName }
+        $vlanObject = Get-CohesityVlan | Where-Object { $_.id -eq $VlanId }
         if ($null -eq $vlanObject) {
-            Write-Host "VLAN name  '$VlanName' does not exists"
+            Write-Host "VLAN id '$VlanId' does not exists"
             return
         }
         $cohesityClusterURL = $cohesityCluster + '/irisservices/api/v1/public/vlans/' + $vlanObject.id
@@ -73,6 +74,7 @@ function New-CohesityVirtualIP {
             CSLog -Message $errorMsg
         }
     }
+
     End {
     }
 }
